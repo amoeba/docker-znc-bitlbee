@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+set -e
+
+ROOT="/bitlbee/state"
+
+PASS=$1
+
+if [ ! -d ${ROOT}/configs ]; then
+    mkdir -p ${ROOT}/configs
+fi;
+
+if [ ! -e ${ROOT}/configs/bitlbee.conf ]; then
+
+if [ $# -lt 1 ] || [ "$PASS" = "noop" ]; then
+    echo "Usage: $0 <PASSWORD>"
+    exit 1
+fi;
+
+cat<<EOF > ${ROOT}/configs/bitlbee.conf
+[settings]
+User = bitlbee
+AuthMode = Closed
+AuthPassword = $PASS
+DaemonPort = 6667
+EOF
+
+fi;
+
+exec /bitlbee/bin/bitlbee -P $ROOT/pid -c $ROOT/configs/bitlbee.conf -n -v -D
