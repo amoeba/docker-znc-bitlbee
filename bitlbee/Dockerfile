@@ -6,6 +6,8 @@ RUN apt-get install -y libglib2.0-dev
 RUN apt-get install -y libssl-dev
 RUN apt-get install -y g++
 RUN apt-get install -y make
+RUN apt-get install -y xsltproc
+RUN apt-get install -y xmlto
 
 RUN mkdir -p /bitlbee/bin
 RUN mkdir -p /bitlbee/state/configs
@@ -14,12 +16,14 @@ ADD https://launchpad.net/bitlbee/1.2/3.2.1/+download/bitlbee-3.2.1.tar.gz /bitl
 RUN tar zxf bitlbee-3.2.1.tar.gz
 RUN cd bitlbee-3.2.1 && ./configure --ssl=openssl
 RUN cd bitlbee-3.2.1 && make
-RUN cp bitlbee-3.2.1/bitlbee /bitlbee/bin
+RUN cd bitlbee-3.2.1 && make install
 
 RUN apt-get remove -y libglib2.0-dev
 RUN apt-get remove -y libssl-dev
 RUN apt-get remove -y g++
 RUN apt-get remove -y make
+RUN apt-get remove -y xsltproc
+RUN apt-get remove -y xmlto
 RUN apt-get autoremove -y
 RUN apt-get clean
 

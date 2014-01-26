@@ -10,6 +10,10 @@ if [ ! -d ${ROOT}/configs ]; then
     mkdir -p ${ROOT}/configs
 fi;
 
+if [ ! -d ${ROOT}/accounts ]; then
+    mkdir -p ${ROOT}/accounts
+fi;
+
 if [ ! -e ${ROOT}/configs/bitlbee.conf ]; then
 
 if [ $# -lt 1 ] || [ "$PASS" = "noop" ]; then
@@ -22,9 +26,10 @@ cat<<EOF > ${ROOT}/configs/bitlbee.conf
 User = bitlbee
 AuthMode = Closed
 AuthPassword = $PASS
+ConfigDir = /bitlbee/state/accounts
 DaemonPort = 6667
 EOF
 
 fi;
 
-exec /bitlbee/bin/bitlbee -P $ROOT/pid -c $ROOT/configs/bitlbee.conf -n -v -D
+exec bitlbee -P $ROOT/pid -c $ROOT/configs/bitlbee.conf -n -v -D
