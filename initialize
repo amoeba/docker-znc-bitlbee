@@ -132,3 +132,7 @@ DaemonPort = 6667
 EOF
 
 fi;
+
+sudo docker pull sprsquish/bitlbee
+sudo docker pull sprsquish/znc
+sudo docker pull sprsquish/camper-van
