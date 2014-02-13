@@ -12,7 +12,7 @@ RUN apt-get install -y xmlto
 RUN mkdir -p /bitlbee/bin
 RUN mkdir -p /bitlbee/state/configs
 
-ADD https://launchpad.net/bitlbee/1.2/3.2.1/+download/bitlbee-3.2.1.tar.gz /bitlbee-3.2.1.tar.gz
+RUN curl http://get.bitlbee.org/src/bitlbee-3.2.1.tar.gz > bitlbee-3.2.1.tar.gz
 RUN tar zxf bitlbee-3.2.1.tar.gz
 RUN cd bitlbee-3.2.1 && ./configure --ssl=openssl
 RUN cd bitlbee-3.2.1 && make
@@ -30,11 +30,6 @@ RUN apt-get clean
 ADD run /bitlbee/run
 RUN chmod +x /bitlbee/run
 
-RUN adduser --group bitlbee
-RUN useradd -g bitlbee bitlbee
-RUN chown -R bitlbee:bitlbee /bitlbee
-
-USER bitlbee
 EXPOSE 6667
 ENTRYPOINT ["/bitlbee/run"]
 CMD ["noop"]

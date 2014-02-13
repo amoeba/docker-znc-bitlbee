@@ -21,4 +21,4 @@ RUN gem source -c
 
 EXPOSE 7778
 ENTRYPOINT ["/usr/local/bin/camper_van"]
-CMD ["0.0.0.0", "7778"]
+CMD ["0.0.0.0", "7778", "--log-level=warn"]

@@ -1,0 +1,134 @@
+#! /usr/bin/env bash
+
+set -e
+
+mkdir -p /etc/state/{bitlbee,znc}
+
+ZNC_USER=$1
+ZNC_PASS=$2
+CAMPFIRE_PASS=$3
+BITLBEE_PASS=$4
+
+ZNC_ROOT="/etc/state/znc"
+CONFIG_FILE=${ZNC_ROOT}/configs/znc.conf
+
+if [ ! -d ${ZNC_ROOT}/configs ]; then
+    mkdir -p ${ZNC_ROOT}/configs
+fi;
+
+if [ ! -e ${ZNC_ROOT}/znc.pem ]; then
+  openssl req -nodes -newkey rsa:2048 -keyout ${ZNC_ROOT}/znc.pem -x509 -days 365 -out ${ZNC_ROOT}/znc.crt
+  cat ${ZNC_ROOT}/znc.crt >> ${ZNC_ROOT}/znc.pem
+fi;
+
+if [ ! -e $CONFIG_FILE ]; then
+
+if [ $# -lt 4 ]; then
+    echo "Usage: $0 <USER> <PASSWORD> <CAMPFIRE> <BITLBEE>"
+    exit 1
+fi;
+
+ZNC_SALT="$(dd if=/dev/urandom bs=16c count=1 | md5sum | awk '{print $1}')"
+ZNC_HASH="$(echo -n ${ZNC_PASS}${ZNC_SALT} | sha256sum | awk '{print $1}')"
+
+cat<<EOF > ${CONFIG_FILE}
+AnonIPLimit = 10
+ConnectDelay = 5
+LoadModule = palaver
+MaxBufferSize = 500
+ProtectWebSessions = true
+SSLCertFile = /znc/state/znc.pem
+ServerThrottle = 30
+Version = 1.0
+
+<Listener listener0>
+  AllowIRC = true
+  AllowWeb = true
+  IPv4 = true
+  IPv6 = true
+  Port = 6668
+  SSL = true
+</Listener>
+
+<User $ZNC_USER>
+  Admin = true
+  AltNick = ${ZNC_USER}_
+  AppendTimestamp = false
+  AutoClearChanBuffer = true
+  Buffer = 50
+  ChanModes = +stn
+  DenyLoadMod = false
+  DenySetBindHost = false
+  Ident = $ZNC_USER
+  JoinTries = 10
+  LoadModule = controlpanel
+  LoadModule = chansaver
+  LoadModule = clientaway
+  LoadModule = perform
+  MaxNetworks = 1
+  MultiClients = true
+  Nick = $ZNC_USER
+  PrependTimestamp = true
+  QuitMsg = Goodbye
+  StatusPrefix = *
+
+  <Network freenode>
+    FloodBurst = 4
+    FloodRate = 1.00
+    IRCConnectEnabled = true
+    LoadModule = nickserv
+    Server = wright.freenode.net +7070
+    Server = hubbard.freenode.net +7070
+    Server = card.freenode.net +7070
+    Server = verne.freenode.net +7070
+  </Network>
+
+  <Network campfire>
+    FloodBurst = 4
+    FloodRate = 1.00
+    IRCConnectEnabled = true
+    Server = localhost 7778 ${CAMPFIRE_PASS}
+  </Network>
+
+  <Network bitlbee>
+    FloodBurst = 4
+    FloodRate = 1.00
+    IRCConnectEnabled = true
+    LoadModule = simple_away
+    Server = localhost 6667 ${BITLBEE_PASS}
+
+    <Chan &bitlbee>
+    </Chan>
+  </Network>
+
+  <Pass password>
+    Hash = $ZNC_HASH
+    Method = SHA256
+    Salt = $ZNC_SALT
+  </Pass>
+</User>
+EOF
+
+fi;
+
+BITLBEE_ROOT="/etc/state/bitlbee"
+
+if [ ! -d ${BITLBEE_ROOT}/configs ]; then
+    mkdir -p ${BITLBEE_ROOT}/configs
+fi;
+
+if [ ! -d ${BITLBEE_ROOT}/accounts ]; then
+    mkdir -p ${BITLBEE_ROOT}/accounts
+fi;
+
+if [ ! -e ${BITLBEE_ROOT}/configs/bitlbee.conf ]; then
+
+cat<<EOF > ${BITLBEE_ROOT}/configs/bitlbee.conf
+[settings]
+AuthMode = Closed
+AuthPassword = $BITLBEE_PASS
+ConfigDir = /bitlbee/state/accounts
+DaemonPort = 6667
+EOF
+
+fi;

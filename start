@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+
+sudo docker run -d -name bitlbee -v /etc/state/bitlbee:/bitlbee/state sprsquish/bitlbee:latest
+sudo docker run -d -name camper-van sprsquish/camper-van:latest
+sudo docker run -d -name znc -link bitlbee:bitlbee -link camper-van:camper-van -p 6668:6668 -v /etc/state/znc:/znc/state sprsquish/znc:latest
