@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision :docker
   config.vm.provision :shell, :inline => <<END
 service docker stop
-sed -i 's/DOCKER_OPTS=/DOCKER_OPTS="-H tcp:\\/\\/0.0.0.0:4243"/' /etc/init/docker.conf
+sed -i 's/DOCKER_OPTS=/DOCKER_OPTS="-H 0.0.0.0:4243"/' /etc/init/docker.conf
 service docker start
 END
 
