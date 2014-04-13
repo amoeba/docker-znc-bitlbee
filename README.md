@@ -25,5 +25,5 @@ Configuration Params:
 Camper Van
 ----------
 
-Version: 0.0.15
+Version: 0.0.16
 Ruby: 1.9.1

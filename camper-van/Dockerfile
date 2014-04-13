@@ -9,7 +9,7 @@ RUN apt-get install -y build-essential
 RUN apt-get install -y libssl-dev
 RUN apt-get install -y ruby1.9.1-dev
 
-RUN gem install --no-ri --no-rdoc -v 0.0.15 camper_van
+RUN gem install --no-ri --no-rdoc -v 0.0.16 camper_van
 
 RUN apt-get remove -y build-essential
 RUN apt-get remove -y libssl-dev
