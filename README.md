@@ -1,6 +1,8 @@
 Dockerfiles
 ===========
 
+Modified from https://squishtech.com/2014/02/12/chat-proxy/ to **not** include Campfire.
+
 ZNC
 ---
 
@@ -20,10 +22,3 @@ Version: 3.2.1
 Configuration Params:
 
  * --ssl=openssl
-
-
-Camper Van
-----------
-
-Version: 0.0.16
-Ruby: 1.9.1

@@ -4,7 +4,6 @@ set -e
 
 CONFIG_FILE="/znc/state/configs/znc.conf"
 
-sed -i 's/Server = .* 7778/Server = '$CAMPER_VAN_PORT_7778_TCP_ADDR' 7778/' $CONFIG_FILE
 sed -i 's/Server = .* 6667/Server = '$BITLBEE_PORT_6667_TCP_ADDR' 6667/' $CONFIG_FILE
 
 exec znc -r -f -d /znc/state

@@ -6,7 +6,6 @@ mkdir -p /etc/state/{bitlbee,znc}
 
 ZNC_USER=$1
 ZNC_PASS=$2
-CAMPFIRE_PASS=$3
 BITLBEE_PASS=$4
 
 ZNC_ROOT="/etc/state/znc"
@@ -23,8 +22,8 @@ fi;
 
 if [ ! -e $CONFIG_FILE ]; then
 
-if [ $# -lt 4 ]; then
-    echo "Usage: $0 <USER> <PASSWORD> <CAMPFIRE> <BITLBEE>"
+if [ $# -lt 3 ]; then
+    echo "Usage: $0 <USER> <PASSWORD> <BITLBEE>"
     exit 1
 fi;
 
@@ -83,13 +82,6 @@ Version = 1.0
     Server = verne.freenode.net +7070
   </Network>
 
-  <Network campfire>
-    FloodBurst = 4
-    FloodRate = 1.00
-    IRCConnectEnabled = true
-    Server = localhost 7778 ${CAMPFIRE_PASS}
-  </Network>
-
   <Network bitlbee>
     FloodBurst = 4
     FloodRate = 1.00
@@ -135,4 +127,3 @@ fi;
 
 sudo docker pull sprsquish/bitlbee
 sudo docker pull sprsquish/znc
-sudo docker pull sprsquish/camper-van
