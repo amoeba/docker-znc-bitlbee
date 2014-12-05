@@ -52,7 +52,7 @@ Version = 1.4
 
 <User $ZNC_USER>
   Admin = true
-  AltNick = $ZNC_USER_
+  AltNick = ${ZNC_USER}_
   AppendTimestamp = false
   AutoClearChanBuffer = true
   Buffer = 1000
